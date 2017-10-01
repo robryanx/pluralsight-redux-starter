@@ -60,6 +60,7 @@ class CourseApi {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve(Object.assign([], courses));
+        //reject('No courses');
       }, delay);
     });
   }

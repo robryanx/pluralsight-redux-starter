@@ -1,38 +1,53 @@
 import React from 'react';
+import PropTypes from 'proptypes';
+import {connect} from 'react-redux';
+import * as courseActions from '../../actions/courseActions';
+import {bindActionCreators} from 'redux';
+import CourseList from './CourseList';
+import {browserHistory, Link, IndexLink} from 'react-router';
 
 class CoursesPage extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = {
-      course: { title: "" }
-    };
-
-    this.onTitleChange = this.onTitleChange.bind(this);
-    this.onClickSave = this.onClickSave.bind(this);
+    this.redirectToAddCoursePage = this.redirectToAddCoursePage.bind(this);
   }
 
-  onTitleChange(event) {
-    const course = this.state.course;
-    course.title = event.target.value;
-    this.setState({ course: course });
-  }
-
-  onClickSave() {
-    alert(`Saving ${this.state.course.title}`);
+  redirectToAddCoursePage() {
+    this.context.router.push('/course');
   }
 
   render() {
     return (
       <div>
         <h1>Courses</h1>
-        <h2>Add Course</h2>
-
-        <input type="text" onChange={this.onTitleChange} value={this.state.course.title} />
-        <input type="submit" value="save" onClick={this.onClickSave}/>
+        <input type="submit" value="Add Course" className="btn btn-primary" onClick={this.redirectToAddCoursePage} />
+        <Link to="/course">Add Course</Link>
+        <CourseList courses={this.props.courses}/>
       </div>
     );
   }
 }
 
-export default CoursesPage;
+CoursesPage.propTypes = {
+  actions: PropTypes.object.isRequired,
+  courses: PropTypes.array.isRequired
+};
+
+CoursesPage.contextTypes = {
+  router: PropTypes.object
+};
+
+function mapStateToProps(state, ownProps) {
+  return {
+    courses: state.courses
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(courseActions, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
