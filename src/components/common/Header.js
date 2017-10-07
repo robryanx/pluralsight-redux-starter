@@ -10,14 +10,15 @@ const Header = (props) => {
       {" | "}
       <Link to="/about" activeClassName="active">About</Link>
       {" | "}
-      <Link to="/courses" activeClassName="active">Courses</Link>
+      <Link to="/courses" activeClassName="active">Courses ({props.courseCount})</Link>
       {props.loading && <LoadingDots dots={20} interval={100} />}
     </nav>
   );
 };
 
 Header.propTypes = {
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  courseCount: PropTypes.number
 };
 
 export default Header;

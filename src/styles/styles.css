@@ -11,6 +11,10 @@ a.active {
   color: orange;
 }
 
+a:hover {
+ cursor:pointer;
+}
+
 nav {
   padding-top: 20px;
 }

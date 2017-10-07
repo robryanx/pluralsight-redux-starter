@@ -1,5 +1,7 @@
 import webpack from 'webpack';
 import path from 'path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import HtmlWebpackHarddiskPlugin from 'html-webpack-harddisk-plugin';
 
 export default {
   debug: true,
@@ -8,7 +10,7 @@ export default {
   entry: [
     'eventsource-polyfill', // necessary for hot reloading with IE
     'webpack-hot-middleware/client?reload=true', //note that it reloads the page if hot module reloading fails.
-    path.resolve(__dirname, 'src/index')
+    path.resolve(__dirname, 'src/index.js')
   ],
   target: 'web',
   output: {
@@ -21,7 +23,19 @@ export default {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
+    new HtmlWebpackPlugin({
+      alwaysWriteToDisk: true,
+      template: path.join(__dirname, 'src/index.ejs'),
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true
+      },
+      inject: true
+    }),
+    new HtmlWebpackHarddiskPlugin({
+      outputPath: path.resolve(__dirname, 'dist')
+    })
   ],
   module: {
     loaders: [

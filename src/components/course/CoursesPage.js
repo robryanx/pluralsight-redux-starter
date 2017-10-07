@@ -11,6 +11,15 @@ class CoursesPage extends React.Component {
     super(props, context);
 
     this.redirectToAddCoursePage = this.redirectToAddCoursePage.bind(this);
+    this.onDelete = this.onDelete.bind(this);
+  }
+
+  onDelete(event) {
+    event.preventDefault();
+
+    let course_id = event.target.dataset.id;
+
+    this.props.actions.deleteCourse(course_id);
   }
 
   redirectToAddCoursePage() {
@@ -23,7 +32,7 @@ class CoursesPage extends React.Component {
         <h1>Courses</h1>
         <input type="submit" value="Add Course" className="btn btn-primary" onClick={this.redirectToAddCoursePage} />
         <Link to="/course">Add Course</Link>
-        <CourseList courses={this.props.courses}/>
+        <CourseList courses={this.props.courses} onDelete={this.onDelete} loading={this.props.loading}/>
       </div>
     );
   }
@@ -31,7 +40,8 @@ class CoursesPage extends React.Component {
 
 CoursesPage.propTypes = {
   actions: PropTypes.object.isRequired,
-  courses: PropTypes.array.isRequired
+  courses: PropTypes.array.isRequired,
+  loading: PropTypes.object
 };
 
 CoursesPage.contextTypes = {
@@ -39,8 +49,12 @@ CoursesPage.contextTypes = {
 };
 
 function mapStateToProps(state, ownProps) {
+  let courses = [...state.courses];
+  courses.sort((course_a, course_b) => course_a.title.localeCompare(course_b.title, 'en', { sensitivity: 'base' } ));
+
   return {
-    courses: state.courses
+    courses: courses,
+    loading: state.ajaxCallsInProgress > 0
   };
 }
 
